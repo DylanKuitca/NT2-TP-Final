@@ -4,30 +4,41 @@ import axios from 'axios'
 
 Vue.use(Vuex)
 
+const URL = 'https://6286d6fae9494df61b2e1214.mockapi.io/api/usuarios/'
+
 export default new Vuex.Store({
   state: {
-    url:'https://6286d6fae9494df61b2e1214.mockapi.io/api/usuarios',
-    usuario:''
+    usuarios:[]
   },
   getters: {
-
+    getUsuarios: state => state.usuarios
   },
   actions: {
-    POST_NEW_USER({commit}, nuevoUsuario){
+    async POST_NEW_USER({commit}, nuevoUsuario){
       console.log('action -> postPersona',nuevoUsuario);
-      commit('POST',nuevoUsuario)
+      commit('postUsuario',nuevoUsuario)
+    },
+    async GET_PERSONAS({commit}) {
+      let res = await axios.get(URL)
+      commit('getUsuarios',res.data)
     }
   
   },
   mutations: {
-    async POST(state, nuevoUsuario) {
-      try {
-          let { resp } = await axios.post(state.url,nuevoUsuario)
-          console.log(resp.data);
-        } catch (err) {
-          console.error(err);
-        }
+  
+    getUsuarios(state,data){
+      state.usuarios = data
+      return data
     },
+    postUsuario(state,nuevoUsuario) {
+      try {
+        let { resp } = axios.post(URL,nuevoUsuario)
+        state.usuarios = resp
+        console.log(resp);
+      } catch (error) {
+        console.log(error);
+      }
+    }
   },
  
   modules: {

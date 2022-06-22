@@ -4,10 +4,17 @@
       <h2 class="text-center mt-5">Tareas Pendientes</h2>
 
       <div class="d-flex">
-        <input v-model="tarea" type="text" placeholder="Ingresar Tarea" class="form-control" />
-        <button @click="agregarTarea()" class="btn btn-warning rounded 0">ENVIAR</button>
+        <input
+          v-model="tarea"
+          type="text"
+          placeholder="Ingresar Tarea"
+          class="form-control"
+        />
+        <button @click="agregarTarea()" class="btn btn-warning rounded 0">
+          ENVIAR
+        </button>
       </div>
-      <br>
+      <br />
       <table class="table table-bordered">
         <thead>
           <tr>
@@ -16,21 +23,24 @@
             <th scope="col">Estado</th>
             <th scope="col" class="text-center">#</th>
             <th scope="col" class="text-center">#</th>
-
           </tr>
         </thead>
         <tbody>
           <tr v-for="(tarea, index) in tareas" :key="index">
-            <td>{{index + 1}}</td>
+            <td>{{ index + 1 }}</td>
             <td>
-              <span :class="{'TareaTerminada': tarea.estado === 'terminada'}">
-              {{tarea.nombre}}
+              <span :class="{ TareaTerminada: tarea.estado === 'terminada' }">
+                {{ tarea.nombre }}
               </span>
-            </td> 
-            
+            </td>
+
             <td>
-              <span @click="cambiarEstado(index)" class="pointer" :class="cambiarColorEstado(tarea.estado)">
-                {{tarea.estado}}
+              <span
+                @click="cambiarEstado(index)"
+                class="pointer"
+                :class="cambiarColorEstado(tarea.estado)"
+              >
+                {{ tarea.estado }}
               </span>
             </td>
             <td>
@@ -47,6 +57,34 @@
         </tbody>
       </table>
 
+      <div class="container mt-1">
+          <div class="jumbotron">
+             <h3>Estado {{ calcularTareas.porcentaje }}% <br></h3>
+            <div class="media border p-3">
+              <img
+                src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/5_avatar-256.png"
+                alt="Pepito Gomez"
+                class="mr-3 mt-3 rounded-circle"
+                style="width: 60px"
+              />
+              <div class="media-body">
+                <h4>
+                  Pepita Gomez <small><i>{{getFecha()}}</i></small>
+                </h4>
+                <p>
+                El total de tareas: {{ calcularTareas.total }} <br>
+                Terminadas: {{ calcularTareas.cantTerminadas }} <br>
+                Pendientes: {{ calcularTareas.cantPendientes }} <br>
+                En Progreso: {{ calcularTareas.cantEnProgreso }} <br>
+                </p>
+              </div>
+            </div>
+          </div>
+      </div>
+
+      <div>
+       
+      </div>
     </div>
   </section>
 </template>
@@ -58,60 +96,79 @@ export default {
   mounted() {},
   data() {
     return {
-      tarea:'',
+      tarea: "",
       editTarea: null,
-      colorEstados:['text-danger','text-warning','text-success'],
-      estados:['pendiente','en-progreso','terminada'],
-      tareas:[
-        {nombre: 'Estudiar NT2', estado: 'en-progreso'},
-        {nombre: 'Dormir', estado: 'pendiente'},
-        {nombre: 'Tomar Agua', estado: 'pendiente'},
-        {nombre: 'ganas de vivir', estado: 'terminada'}
-      ]
+      colorEstados: ["text-danger", "text-warning", "text-success"],
+      estados: ["pendiente", "en-progreso", "terminada"],
+      tareas: [
+        { nombre: "Estudiar NT2", estado: "en-progreso" },
+        { nombre: "Dormir", estado: "pendiente" },
+        { nombre: "Tomar Agua", estado: "pendiente" },
+        { nombre: "ganas de vivir", estado: "terminada" },
+      ],
     };
   },
   methods: {
     agregarTarea() {
       if (this.tarea.length > 0) {
         if (this.editTarea === null) {
-           this.tareas.push({
-              nombre: this.tarea,
-              estado: 'to-do'
-            })
+          this.tareas.push({
+            nombre: this.tarea,
+            estado: "to-do",
+          });
         } else {
-          this.tareas[this.editTarea].nombre = this.tarea
-          this.editTarea = null
+          this.tareas[this.editTarea].nombre = this.tarea;
+          this.editTarea = null;
         }
-           
       }
-      this.tarea=''
+      this.tarea = "";
     },
     removerTarea(index) {
-      this.tareas.splice(index,1)
+      this.tareas.splice(index, 1);
     },
-    editarTarea(index){
-      this.tarea = this.tareas[index].nombre
-      this.editTarea = index
+    editarTarea(index) {
+      this.tarea = this.tareas[index].nombre;
+      this.editTarea = index;
     },
     cambiarEstado(index) {
-     let nuevoIndice = this.estados.indexOf(this.tareas[index].estado)
-     console.log(nuevoIndice);
+      let nuevoIndice = this.estados.indexOf(this.tareas[index].estado);
+      console.log(nuevoIndice);
       if (++nuevoIndice > 2) {
-        nuevoIndice = 0 
-      } 
-      this.tareas[index].estado = this.estados[nuevoIndice]
+        nuevoIndice = 0;
+      }
+      this.tareas[index].estado = this.estados[nuevoIndice];
     },
     cambiarColorEstado(estado) {
-      let estilo = 'text-danger'
-      if (estado == 'en-progreso') {
-        estilo = 'text-warning'
-      } if (estado == 'terminada') {
-        estilo = 'text-success'
+      let estilo = "text-danger";
+      if (estado == "en-progreso") {
+        estilo = "text-warning";
       }
-      return estilo
+      if (estado == "terminada") {
+        estilo = "text-success";
+      }
+      return estilo;
+    },
+    getFecha() {
+      const hoy = new Date(Date.now());
+      return hoy.toString();
     }
   },
-  computed: {},
+  computed: {
+    calcularTareas() {
+      let total = this.tareas.length;
+      let cantTerminadas = this.tareas.filter((t) => t.estado == "terminada").length;
+      let cantPendientes = this.tareas.filter((t) => t.estado == "pendiente").length;
+      let cantEnProgreso = this.tareas.filter((t) => t.estado == "en-progreso").length;
+
+      return {
+        total,
+        cantTerminadas,
+        cantPendientes,
+        cantEnProgreso,
+        porcentaje : cantTerminadas * 100 / total
+      };
+    },
+  },
 };
 </script>
 

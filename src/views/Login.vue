@@ -6,8 +6,8 @@
     <br>
     <div class="container d-flex justify-content-center">
       <div class="jumbotron text-center">
-        <h1>Pagina de Ingreso  <font-awesome-icon icon="fa-solid fa-gears" /></h1>
-       
+        <h1>Pagina de Ingreso</h1>
+       <!-- <font-awesome-icon icon="fa-solid fa-gears" /> -->
         <br>
         <vue-form :state="formState" @submit.prevent="login()">
 
@@ -51,7 +51,7 @@
           </validate>
 
           <button class="btn btn-primary mt-3 mb-3 mr-3" :disabled="formState.$invalid" type="login()">Login</button>
-         
+         {{mostrarUsuarios}}
         </vue-form>
 
       </div>
@@ -61,11 +61,14 @@
 </template>
 
 <script>
+
+/* import { mapGetters } from 'vuex' */
+
 export default {
   name: "src-views-login-vue",
   props: [],
   mounted() {
-
+     this.$store.dispatch('GET_PERSONAS')
   },
   data() {
     return {
@@ -83,10 +86,16 @@ export default {
       login() {
         console.log('Email: '+ this.formData.Mail);
         console.log('Email: '+ this.formData.Clave);
+      },
+      mostrar(){
+       console.log( {...this.$store.state.usuario});
       }
   },
   computed: {
-
+ 
+    mostrarUsuarios() {
+      return this.$store.state.usuarios
+    }
   },
 };
 </script>

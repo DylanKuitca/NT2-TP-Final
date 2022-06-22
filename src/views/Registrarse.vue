@@ -6,7 +6,7 @@
     <br>
       <div class="container d-flex justify-content-center">
       <div class="jumbotron text-center">
-        <h1>Pagina de Registro</h1>
+        <h1>Pagina de Registro<span class="fa fa-pen"></span></h1>
         <br>
         <vue-form :state="formState" @submit.prevent="registrar()">
 
@@ -95,7 +95,7 @@
           <button class="btn btn-success mt-3 mb-3 mr-3" :disabled="formState.$invalid" @click="registrar">Registrarse</button>
          
         </vue-form>
-
+        {{mostrarUsuarios}}
       </div>
     </div>
   </section>
@@ -108,7 +108,7 @@
     name: 'src-views-registrarse-vue',
     props: [],
     mounted () {
-
+      this.checkUsuarioExistente()
     },
     data() {
       return {
@@ -127,16 +127,26 @@
       },
       registrar() {
         this.$store.dispatch('POST_NEW_USER',this.formData)
+        this.ClaveCheck = ''
         this.formData = this.getInitialData()
         this.formState._reset()
+
+        this.$router.push( { name: 'ToDoApp' } )
       },
       clavesDistintas() {
         return this.formData.password!=this.ClaveCheck
+      },
+      checkUsuarioExistente() {
+      this.$store.dispatch('GET_PERSONAS')
+      let parsedobj = JSON.parse(JSON.stringify(this.$store.state.usuarios))
+      console.log(parsedobj)
       }
 
   },
     computed: {
-
+      mostrarUsuarios() {
+        return this.$store.state.usuarios
+      }
     }
 }
 
