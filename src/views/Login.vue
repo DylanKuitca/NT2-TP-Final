@@ -50,7 +50,9 @@
             </field-messages>
           </validate>
 
-          <button class="btn btn-primary mt-3 mb-3 mr-3" :disabled="formState.$invalid" type="login()">Login</button>
+          <button class="btn btn-primary mt-3 mb-3 mr-3" :disabled="formState.$invalid" @click="login()" >Login</button>
+          <div class="errorMessage alert alert-danger" v-show="mostrarError">Error en usuario y/o contraseña</div>
+          <!-- type="login()" -->
          {{mostrarUsuarios}}
         </vue-form>
 
@@ -74,6 +76,7 @@ export default {
     return {
       formState: {},
       formData: this.getInitialData(),
+      mostrarError: false
     };
   },
   methods: {
@@ -85,7 +88,17 @@ export default {
       },
       login() {
         console.log('Email: '+ this.formData.Mail);
-        console.log('Email: '+ this.formData.Clave);
+        console.log('Clave: '+ this.formData.Clave);
+
+        for(let i = 0; i < this.mostrarUsuarios.length; i++) {
+          console.log(this.mostrarUsuarios[i].email);
+            if (this.mostrarUsuarios[i].email == this.formData.Mail && this.mostrarUsuarios[i].password == this.formData.Clave) {
+              this.$store.dispatch('setUsuario', this.mostrarUsuarios[i])
+              this.$router.push( { name: 'ToDoApp' } )
+            }
+        }
+        this.mostrarError = true
+
       },
       mostrar(){
        console.log( {...this.$store.state.usuario});

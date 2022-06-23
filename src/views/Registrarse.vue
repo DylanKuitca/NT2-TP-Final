@@ -93,6 +93,7 @@
           </validate>
 
           <button class="btn btn-success mt-3 mb-3 mr-3" :disabled="formState.$invalid" @click="registrar">Registrarse</button>
+          <div class="errorMessage alert alert-danger" v-show="mostrarError">Error, ya existe un usuario con ese E-mail</div>
          
         </vue-form>
         {{mostrarUsuarios}}
@@ -115,6 +116,7 @@
         formState: {},
         ClaveCheck:'',
         formData: this.getInitialData(),
+        mostrarError: false
       };
   },
   methods: {
@@ -123,15 +125,20 @@
           nombre:'',
           email:'',
           password:'',
+          tareas: []
         }
       },
       registrar() {
+        this.checkearExistente()
+        if (this.mostrarError == false) {
+        
         this.$store.dispatch('POST_NEW_USER',this.formData)
         this.ClaveCheck = ''
+        this.agregarUsuarioAlStore()
         this.formData = this.getInitialData()
         this.formState._reset()
-
         this.$router.push( { name: 'ToDoApp' } )
+        } 
       },
       clavesDistintas() {
         return this.formData.password!=this.ClaveCheck
@@ -140,6 +147,25 @@
       this.$store.dispatch('GET_PERSONAS')
       let parsedobj = JSON.parse(JSON.stringify(this.$store.state.usuarios))
       console.log(parsedobj)
+      },
+      agregarUsuarioAlStore() {
+      this.$store.dispatch('GET_PERSONAS')
+
+      for(let i = 0; i < this.mostrarUsuarios.length; i++) {
+            if (this.mostrarUsuarios[i].email == this.formData.email && this.mostrarUsuarios[i].password == this.formData.password) {
+              console.log(this.mostrarUsuarios[i]);
+              this.$store.dispatch('setUsuario', this.mostrarUsuarios[i])
+              this.$router.push( { name: 'ToDoApp' } )
+            }
+        }
+      },
+      checkearExistente() {
+        for(let i = 0; i < this.mostrarUsuarios.length; i++) {
+            if (this.mostrarUsuarios[i].email == this.formData.email) {
+              this.mostrarError = true
+            }
+        }
+        
       }
 
   },

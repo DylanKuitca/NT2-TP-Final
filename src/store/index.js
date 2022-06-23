@@ -8,7 +8,8 @@ const URL = 'https://6286d6fae9494df61b2e1214.mockapi.io/api/usuarios/'
 
 export default new Vuex.Store({
   state: {
-    usuarios:[]
+    usuarios:[],
+    usuarioActual: {}
   },
   getters: {
     getUsuarios: state => state.usuarios
@@ -21,10 +22,18 @@ export default new Vuex.Store({
     async GET_PERSONAS({commit}) {
       let res = await axios.get(URL)
       commit('getUsuarios',res.data)
+    },
+
+    setUsuario({commit}, usuario) {
+      commit('setUsuario', usuario)
     }
   
   },
   mutations: {
+
+    setUsuario(state, usuario) {
+      state.usuarioActual = usuario
+    },
   
     getUsuarios(state,data){
       state.usuarios = data
