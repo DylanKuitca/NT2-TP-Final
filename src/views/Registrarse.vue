@@ -109,7 +109,7 @@
     name: 'src-views-registrarse-vue',
     props: [],
     mounted () {
-      this.checkUsuarioExistente()
+      this.$store.dispatch('GET_PERSONAS')
     },
     data() {
       return {
@@ -129,25 +129,25 @@
         }
       },
       registrar() {
+
         this.checkearExistente()
         if (this.mostrarError == false) {
         
+        this.$store.dispatch('GET_PERSONAS')
         this.$store.dispatch('POST_NEW_USER',this.formData)
         this.ClaveCheck = ''
+        
         this.agregarUsuarioAlStore()
         this.formData = this.getInitialData()
         this.formState._reset()
         this.$router.push( { name: 'ToDoApp' } )
+        this.$router.go()
         } 
       },
       clavesDistintas() {
         return this.formData.password!=this.ClaveCheck
       },
-      checkUsuarioExistente() {
-      this.$store.dispatch('GET_PERSONAS')
-      let parsedobj = JSON.parse(JSON.stringify(this.$store.state.usuarios))
-      console.log(parsedobj)
-      },
+      
       agregarUsuarioAlStore() {
       this.$store.dispatch('GET_PERSONAS')
 

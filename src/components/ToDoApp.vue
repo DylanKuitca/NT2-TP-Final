@@ -59,24 +59,24 @@
 
       <div class="container mt-1">
           <div class="jumbotron">
-             <h3>Estado {{ calcularTareas.porcentaje }}% <br></h3>
+             <h3>Estado {{ calcularTareas.porcentaje }}% <br></h3> 
             <div class="media border p-3">
               <img
                 src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/5_avatar-256.png"
                 alt="Pepito Gomez"
                 class="mr-3 mt-3 rounded-circle"
-                style="width: 60px"
+                style="width: 150px"
               />
+                 <div><b> {{this.$store.state.usuarioActual.nombre}} </b><br>
+                 <i>{{ getFecha() }}</i>
+                </div>
               <div class="media-body">
-                <h4>
-                  {{this.$store.state.usuarioActual.nombre}} <small><i>{{getFecha()}}</i></small>
-                </h4>
-                <p>
-                El total de tareas: {{ calcularTareas.total }} <br>
-                Terminadas: {{ calcularTareas.cantTerminadas }} <br>
-                Pendientes: {{ calcularTareas.cantPendientes }} <br>
-                En Progreso: {{ calcularTareas.cantEnProgreso }} <br>
-                </p>
+                    <h5>
+                      El total de tareas: {{ calcularTareas.total }} <br>
+                      Terminadas: {{ calcularTareas.cantTerminadas }} <br>
+                      Pendientes: {{ calcularTareas.cantPendientes }} <br>
+                      En Progreso: {{ calcularTareas.cantEnProgreso }} <br>
+                    </h5>
               </div>
             </div>
           </div>
@@ -169,8 +169,13 @@ export default {
       return estilo;
     },
     getFecha() {
-      const hoy = new Date(Date.now());
-      return hoy.toString();
+      var today = new Date();
+      var dd = String(today.getDate()).padStart(2, '0');
+      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+      var yyyy = today.getFullYear();
+
+      today = mm + '/' + dd + '/' + yyyy;
+      return today
     }
   },
   computed: {
