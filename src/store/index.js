@@ -9,10 +9,11 @@ const URL = 'https://6286d6fae9494df61b2e1214.mockapi.io/api/usuarios/'
 export default new Vuex.Store({
   state: {
     usuarios:[],
-    usuarioActual: {}
+    usuarioActual: {},
+    mailUsuario: ''
   },
   getters: {
-    getUsuarios: state => state.usuarios
+    getterUsuarios: state => state.usuarios
   },
   actions: {
     async POST_NEW_USER({commit}, nuevoUsuario){
@@ -26,10 +27,18 @@ export default new Vuex.Store({
 
     setUsuario({commit}, usuario) {
       commit('setUsuario', usuario)
+    },
+
+    setMail({commit}, mail) {
+      commit('setMail', mail)
     }
   
   },
   mutations: {
+
+    setMail(state, mail) {
+      state.mailUsuario = mail
+    },
 
     setUsuario(state, usuario) {
       state.usuarioActual = usuario

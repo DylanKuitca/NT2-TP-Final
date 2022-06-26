@@ -105,11 +105,13 @@
 
 <script>
 
+// import axios from 'axios';
+
   export default  {
     name: 'src-views-registrarse-vue',
     props: [],
     mounted () {
-      this.checkUsuarioExistente()
+      this.cargarUsuarios()
     },
     data() {
       return {
@@ -122,19 +124,20 @@
   methods: {
     getInitialData() {
         return {
+          // image: this.getProfileImage(),
           nombre:'',
           email:'',
           password:'',
           tareas: []
         }
       },
-      registrar() {
+     async registrar() {
         this.checkearExistente()
         if (this.mostrarError == false) {
-        
-        this.$store.dispatch('POST_NEW_USER',this.formData)
+        await this.$store.dispatch('POST_NEW_USER',this.formData)
+        this.$store.dispatch('setMail', this.formData.email)
+        console.log('entro aca');
         this.ClaveCheck = ''
-        this.agregarUsuarioAlStore()
         this.formData = this.getInitialData()
         this.formState._reset()
         this.$router.push( { name: 'ToDoApp' } )
@@ -143,35 +146,46 @@
       clavesDistintas() {
         return this.formData.password!=this.ClaveCheck
       },
-      checkUsuarioExistente() {
-      this.$store.dispatch('GET_PERSONAS')
-      let parsedobj = JSON.parse(JSON.stringify(this.$store.state.usuarios))
-      console.log(parsedobj)
+      async cargarUsuarios() {
+      await this.$store.dispatch('GET_PERSONAS')
+      
       },
-      agregarUsuarioAlStore() {
-      this.$store.dispatch('GET_PERSONAS')
-
-      for(let i = 0; i < this.mostrarUsuarios.length; i++) {
-            if (this.mostrarUsuarios[i].email == this.formData.email && this.mostrarUsuarios[i].password == this.formData.password) {
-              console.log(this.mostrarUsuarios[i]);
-              this.$store.dispatch('setUsuario', this.mostrarUsuarios[i])
-              this.$router.push( { name: 'ToDoApp' } )
-            }
-        }
-      },
+      // async agregarUsuarioAlStore() {
+      //   console.log('entro a usuario');
+      // await this.$store.dispatch('GET_PERSONAS')
+      // console.log('paso el get');
+      // for(let i = 0; i < this.mostrarUsuarios; i++) {
+      //   console.log(i);
+      //       if (this.mostrarUsuarios[i].email == this.formData.email && this.mostrarUsuarios[i].password == this.formData.password) {
+      //         this.$store.dispatch('setUsuario', this.mostrarUsuarios[i])
+              
+      //       }
+      //   }
+      // },
       checkearExistente() {
+        console.log('checkearExistente 1');
         for(let i = 0; i < this.mostrarUsuarios.length; i++) {
+          console.log('checkearExistente 2');
             if (this.mostrarUsuarios[i].email == this.formData.email) {
               this.mostrarError = true
+              console.log('existente encontrado');
+              break
             }
         }
         
-      }
+      },
+
+    //  async getProfileImage() {
+    //     let result = await axios.get('https://randomuser.me/api/')
+    //     console.log(result);
+    //     let image = result.results.picture.large
+    //     return image
+    //   }
 
   },
     computed: {
       mostrarUsuarios() {
-        return this.$store.state.usuarios
+        return this.$store.getters.getterUsuarios
       }
     }
 }
