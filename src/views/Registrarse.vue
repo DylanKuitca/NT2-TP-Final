@@ -135,14 +135,13 @@
         
         this.$store.dispatch('GET_PERSONAS')
         this.$store.dispatch('POST_NEW_USER',this.formData)
-        
+        this.ClaveCheck = ''
         
         this.agregarUsuarioAlStore()
-        this.ClaveCheck = ''
-        this.formData = this.getInitialData()
-        this.formState._reset()
-        this.$router.push( { name: 'ToDoApp' } )
-        this.$router.go()
+        // this.formData = this.getInitialData()
+        // this.formState._reset()
+        // this.$router.push( { name: 'ToDoApp' } )
+        // this.$router.go()
         } 
       },
       clavesDistintas() {
@@ -161,13 +160,11 @@
         }
       },
       checkearExistente() {
-        if (this.mostrarUsuarios.length > 0) {
-           for(let i = 0; i < this.mostrarUsuarios.length; i++) {
+        for(let i = 0; i < this.mostrarUsuarios.length; i++) {
             if (this.mostrarUsuarios[i].email == this.formData.email) {
               this.mostrarError = true
             }
         }
-      }
         
       }
 
