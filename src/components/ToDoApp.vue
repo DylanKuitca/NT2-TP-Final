@@ -5,7 +5,7 @@
 
       <div class="d-flex">
         <input
-          v-model="tarea"
+          v-model="t"
           type="text"
           placeholder="Ingresar Tarea"
           class="form-control"
@@ -58,52 +58,53 @@
       </table>
 
       <div class="container mt-1">
-          <div class="jumbotron">
-             <h3>Estado {{ calcularTareas.porcentaje }}% <br></h3> 
-            <div class="media border p-3">
-              <img
-                src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/5_avatar-256.png"
-                alt="Pepito Gomez"
-                class="mr-3 mt-3 rounded-circle"
-                style="width: 150px"
-              />
-                 <div><b> {{this.$store.state.usuarioActual.nombre}} </b><br>
-                 <i>{{ getFecha() }}</i>
-                </div>
-              <div class="media-body">
-                    <h5>
-                      El total de tareas: {{ calcularTareas.total }} <br>
-                      Terminadas: {{ calcularTareas.cantTerminadas }} <br>
-                      Pendientes: {{ calcularTareas.cantPendientes }} <br>
-                      En Progreso: {{ calcularTareas.cantEnProgreso }} <br>
-                    </h5>
-              </div>
+        <div class="jumbotron">
+          <h3>Estado {{ calcularTareas.porcentaje }}% <br /></h3>
+          <div class="media border p-3">
+            <img
+              src="https://cdn3.iconfinder.com/data/icons/business-avatar-1/512/5_avatar-256.png"
+              alt="Pepito Gomez"
+              class="mr-3 mt-3 rounded-circle"
+              style="width: 60px"
+            />
+            <div class="media-body">
+              <h4>
+                {{ this.$store.state.usuarioActual.nombre }}
+                <small
+                  ><i>{{ getFecha() }}</i></small
+                >
+              </h4>
+              <p>
+                El total de tareas: {{ calcularTareas.total }} <br />
+                Terminadas: {{ calcularTareas.cantTerminadas }} <br />
+                Pendientes: {{ calcularTareas.cantPendientes }} <br />
+                En Progreso: {{ calcularTareas.cantEnProgreso }} <br />
+              </p>
             </div>
           </div>
+        </div>
       </div>
 
-      <div>
-       
-      </div>
+      <div></div>
     </div>
   </section>
 </template>
 
 <script>
+import axios from "axios";
 
-import axios from 'axios'
-
-const URL = 'https://6286d6fae9494df61b2e1214.mockapi.io/api/usuarios/'
+const URL = "https://6286d6fae9494df61b2e1214.mockapi.io/api/usuarios/";
 
 export default {
   name: "src-components-to-do-app",
   props: [],
   mounted() {
     // this.cargarData()
+    this.loadInfo()
   },
   data() {
     return {
-      tarea: "",
+      t: "",
       editTarea: null,
       colorEstados: ["text-danger", "text-warning", "text-success"],
       estados: ["pendiente", "en-progreso", "terminada"],
@@ -111,6 +112,24 @@ export default {
     };
   },
   methods: {
+    async loadInfo() {
+      await this.cargarUsuarios();
+      await this.agregarUsuarioActual()
+      await this.cargarTareas();
+    },
+    async cargarUsuarios() {
+      await this.$store.dispatch("GET_PERSONAS");
+    },
+    agregarUsuarioActual() {
+
+      for (let index = 0; index < this.$store.state.usuarios.length; index++) {
+        if (this.this.$store.state.usuarios[index].email == this.$store.state.mailUsuario) {
+          const user = this.$store.state.usuarios[index]
+          this.$store.dispatch('setUsuario', user)
+        }
+
+      }
+    },
     agregarTarea() {
       // if (this.tarea.length > 0) {
       //   if (this.editTarea === null) {
@@ -125,8 +144,14 @@ export default {
       // }
       // this.tarea = "";
       console.log(URL + this.$store.state.usuarioActual.id);
-      this.$store.state.usuarioActual.tareas.push({nombre: this.tarea, estado: "pendiente"})
-      axios.put(URL + this.$store.state.usuarioActual.id , this.$store.state.usuarioActual)
+      this.$store.state.usuarioActual.tareas.push({
+        nombre: this.t,
+        estado: "pendiente",
+      });
+      axios.put(
+        URL + this.$store.state.usuarioActual.id,
+        this.$store.state.usuarioActual
+      );
     },
     // async cargarData() {
     //   let call = await axios.get(URL)
@@ -147,8 +172,8 @@ export default {
       this.tareas.splice(index, 1);
     },
     editarTarea(index) {
-      this.tarea = this.tareas[index].nombre;
-      this.editTarea = index;
+      this.tareas[index].nombre = this.t 
+      
     },
     cambiarEstado(index) {
       let nuevoIndice = this.estados.indexOf(this.tareas[index].estado);
@@ -169,28 +194,35 @@ export default {
       return estilo;
     },
     getFecha() {
-      var today = new Date();
-      var dd = String(today.getDate()).padStart(2, '0');
-      var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-      var yyyy = today.getFullYear();
-
-      today = mm + '/' + dd + '/' + yyyy;
-      return today
-    }
+      const hoy = new Date(Date.now());
+      return hoy.toString();
+    },
+    cargarTareas() {
+      this.tareas = this.$store.state.usuarioActual.tareas;
+    },
   },
   computed: {
+     mostrarUsuarios() {
+        return this.$store.getters.getterUsuarios
+      },
     calcularTareas() {
       let total = this.tareas.length;
-      let cantTerminadas = this.tareas.filter((t) => t.estado == "terminada").length;
-      let cantPendientes = this.tareas.filter((t) => t.estado == "pendiente").length;
-      let cantEnProgreso = this.tareas.filter((t) => t.estado == "en-progreso").length;
+      let cantTerminadas = this.tareas.filter(
+        (t) => t.estado == "terminada"
+      ).length;
+      let cantPendientes = this.tareas.filter(
+        (t) => t.estado == "pendiente"
+      ).length;
+      let cantEnProgreso = this.tareas.filter(
+        (t) => t.estado == "en-progreso"
+      ).length;
 
       return {
         total,
         cantTerminadas,
         cantPendientes,
         cantEnProgreso,
-        porcentaje : cantTerminadas * 100 / total
+        porcentaje: (cantTerminadas * 100) / total,
       };
     },
   },
