@@ -138,10 +138,10 @@
         this.ClaveCheck = ''
         
         this.agregarUsuarioAlStore()
-        this.formData = this.getInitialData()
-        this.formState._reset()
-        this.$router.push( { name: 'ToDoApp' } )
-        this.$router.go()
+        // this.formData = this.getInitialData()
+        // this.formState._reset()
+        // this.$router.push( { name: 'ToDoApp' } )
+        // this.$router.go()
         } 
       },
       clavesDistintas() {
