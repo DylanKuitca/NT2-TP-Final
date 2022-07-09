@@ -93,6 +93,7 @@ export default {
         for(let i = 0; i < this.mostrarUsuarios.length; i++) {
           console.log(this.mostrarUsuarios[i].email);
             if (this.mostrarUsuarios[i].email == this.formData.Mail && this.mostrarUsuarios[i].password == this.formData.Clave) {
+              this.$store.state.hasLoggedUser = true
               this.$store.dispatch('setUsuario', this.mostrarUsuarios[i])
               this.$router.push( { name: 'ToDoApp' } )
             }

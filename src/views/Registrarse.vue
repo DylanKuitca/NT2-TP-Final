@@ -137,6 +137,7 @@
         await this.$store.dispatch('POST_NEW_USER',this.formData)
         await this.$store.dispatch('GET_PERSONAS')
         await this.agregarUsuarioAlStore()
+        this.$store.state.hasLoggedUser = true
         this.ClaveCheck = ''
         
         

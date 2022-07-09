@@ -11,7 +11,7 @@
         <div class="navbar-nav">
           <router-link class="nav-link" to="/">Home</router-link>
           <router-link class="nav-link" to="/about">About</router-link>
-          <router-link class="nav-link" to="/ToDoApp">Lista de Tareas</router-link>
+          <router-link class="nav-link" v-show="this.$store.state.hasLoggedUser" to="/ToDoApp">Lista de Tareas</router-link>
         </div>
       </div>
 

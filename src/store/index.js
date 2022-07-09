@@ -9,7 +9,8 @@ const URL = 'https://6286d6fae9494df61b2e1214.mockapi.io/api/usuarios/'
 export default new Vuex.Store({
   state: {
     usuarios:[],
-    usuarioActual: {}
+    usuarioActual: {},
+    hasLoggedUser : false
   },
   getters: {
     getUsuarios: state => state.usuarios
