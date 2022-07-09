@@ -152,6 +152,8 @@ export default {
         URL + this.$store.state.usuarioActual.id,
         this.$store.state.usuarioActual
       );
+      this.cargarUsuarios();
+      this.cargarTareas();
     },
     // async cargarData() {
     //   let call = await axios.get(URL)
@@ -169,11 +171,23 @@ export default {
     //   this.tareas  = axios.get(URL + this.$store.state.usuarioActual.id).tareas
     // },
     removerTarea(index) {
-      this.tareas.splice(index, 1);
+      this.$store.state.usuarioActual.tareas.splice(index, 1);
+      axios.put(
+        URL + this.$store.state.usuarioActual.id,
+        this.$store.state.usuarioActual
+      );
+      this.cargarUsuarios();
+      this.cargarTareas();
+    
     },
     editarTarea(index) {
-      this.tareas[index].nombre = this.t 
-      
+      this.$store.state.usuarioActual.tareas[index].nombre = this.t 
+      axios.put(
+        URL + this.$store.state.usuarioActual.id,
+        this.$store.state.usuarioActual
+      );
+      this.cargarUsuarios();
+      this.car
     },
     cambiarEstado(index) {
       let nuevoIndice = this.estados.indexOf(this.tareas[index].estado);
@@ -181,7 +195,12 @@ export default {
       if (++nuevoIndice > 2) {
         nuevoIndice = 0;
       }
-      this.tareas[index].estado = this.estados[nuevoIndice];
+      this.$store.state.usuarioActual.tareas[index].estado = this.estados[nuevoIndice];
+      axios.put(
+        URL + this.$store.state.usuarioActual.id,
+        this.$store.state.usuarioActual
+      );
+      this.cargarUsuarios();
     },
     cambiarColorEstado(estado) {
       let estilo = "text-danger";
