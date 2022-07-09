@@ -25,6 +25,8 @@ Vue.use(VueAxios,axios)
 
 import './form/form'
 
+import './mixins/globalMixins'
+
 
 Vue.config.productionTip = false
 

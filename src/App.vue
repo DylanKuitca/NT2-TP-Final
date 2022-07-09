@@ -21,7 +21,7 @@
       </form>
     </nav>
 
-    <router-view/>
+    <router-view />
   </div>
 </template>
 
