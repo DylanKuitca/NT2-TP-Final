@@ -18,6 +18,7 @@ export default new Vuex.Store({
     async POST_NEW_USER({commit}, nuevoUsuario){
       console.log('action -> postPersona',nuevoUsuario);
       let {resp} = await axios.post(URL, nuevoUsuario)
+      console.log("Usuario actual: ",this.usuarioActual);
       commit('postUsuario', resp)
     },
     async GET_PERSONAS({commit}) {

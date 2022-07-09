@@ -92,7 +92,7 @@
             </field-messages>
           </validate>
 
-          <button class="btn btn-success mt-3 mb-3 mr-3" :disabled="formState.$invalid" @click="registrar">Registrarse</button>
+          <button class="btn btn-success mt-3 mb-3 mr-3" :disabled="formState.$invalid" @click.prevent="registrar">Registrarse</button>
           <div class="errorMessage alert alert-danger" v-show="mostrarError">Error, ya existe un usuario con ese E-mail</div>
          
         </vue-form>
@@ -149,7 +149,7 @@
         return this.formData.password!=this.ClaveCheck
       },
       
-      agregarUsuarioAlStore() {
+      async agregarUsuarioAlStore() {
 
       for(let i = 0; i < this.mostrarUsuarios.length; i++) {
             if (this.mostrarUsuarios[i].email == this.formData.email && this.mostrarUsuarios[i].password == this.formData.password) {
