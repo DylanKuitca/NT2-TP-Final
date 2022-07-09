@@ -123,7 +123,7 @@ export default {
     agregarUsuarioActual() {
 
       for (let index = 0; index < this.$store.state.usuarios.length; index++) {
-        if (this.this.$store.state.usuarios[index].email == this.$store.state.mailUsuario) {
+        if (this.$store.state.usuarios[index].email == this.$store.state.mailUsuario) {
           const user = this.$store.state.usuarios[index]
           this.$store.dispatch('setUsuario', user)
         }

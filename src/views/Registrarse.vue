@@ -128,20 +128,21 @@
           tareas: []
         }
       },
-      registrar() {
+      async registrar() {
 
         this.checkearExistente()
         if (this.mostrarError == false) {
         
-        this.$store.dispatch('GET_PERSONAS')
-        this.$store.dispatch('POST_NEW_USER',this.formData)
+        // this.$store.dispatch('GET_PERSONAS')
+        await this.$store.dispatch('POST_NEW_USER',this.formData)
+        await this.$store.dispatch('GET_PERSONAS')
+        await this.agregarUsuarioAlStore()
         this.ClaveCheck = ''
         
-        this.agregarUsuarioAlStore()
-        // this.formData = this.getInitialData()
-        // this.formState._reset()
-        // this.$router.push( { name: 'ToDoApp' } )
-        // this.$router.go()
+        
+        this.formData = this.getInitialData()
+        this.formState._reset()
+        this.$router.push( { name: 'ToDoApp' } ).catch(()=>{});
         } 
       },
       clavesDistintas() {
@@ -149,13 +150,12 @@
       },
       
       agregarUsuarioAlStore() {
-      this.$store.dispatch('GET_PERSONAS')
 
       for(let i = 0; i < this.mostrarUsuarios.length; i++) {
             if (this.mostrarUsuarios[i].email == this.formData.email && this.mostrarUsuarios[i].password == this.formData.password) {
-              console.log(this.mostrarUsuarios[i]);
-              this.$store.dispatch('setUsuario', this.mostrarUsuarios[i])
-              this.$router.push( { name: 'ToDoApp' } )
+              console.log("Agregar usuario al store" + this.mostrarUsuarios[i]);
+              let usuario = this.mostrarUsuarios[i];
+              this.$store.dispatch('setUsuario', usuario)
             }
         }
       },

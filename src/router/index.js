@@ -6,7 +6,7 @@ import Registrarse from '../views/Registrarse.vue'
 import ToDoApp from '../components/ToDoApp.vue'
 
 Vue.use(VueRouter)
-
+  
 const routes = [
   {
     path: '/',

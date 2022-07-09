@@ -17,7 +17,8 @@ export default new Vuex.Store({
   actions: {
     async POST_NEW_USER({commit}, nuevoUsuario){
       console.log('action -> postPersona',nuevoUsuario);
-      commit('postUsuario',nuevoUsuario)
+      let {resp} = await axios.post(URL, nuevoUsuario)
+      commit('postUsuario', resp)
     },
     async GET_PERSONAS({commit}) {
       let res = await axios.get(URL)
@@ -39,14 +40,9 @@ export default new Vuex.Store({
       state.usuarios = data
       return data
     },
-    postUsuario(state,nuevoUsuario) {
-      try {
-        let { resp } = axios.post(URL,nuevoUsuario)
-        state.usuarios = resp
-        console.log(resp);
-      } catch (error) {
-        console.log(error);
-      }
+    postUsuario(state,resp) {
+        state.usuarios.push(resp)
+        console.log("REsp :" + resp);
     }
   },
  
